@@ -39,8 +39,9 @@ services:
     networks:
       - external_network
       - internal_network
-    ports:
-      - "127.0.0.1:3000:3000"
+### Use reverse proxy.
+#    ports:
+#      - "127.0.0.1:3000:3000"
     depends_on:
       - db
       - redis
@@ -55,10 +56,12 @@ services:
     env_file: .env.production
     command: yarn start
     networks:
-      - external_network
+### Use reverse proxy (so that `web` has no need to join `external_network`).
+#      - external_network
       - internal_network
-    ports:
-      - "127.0.0.1:4000:4000"
+### Use reverse proxy.
+#    ports:
+#      - "127.0.0.1:4000:4000"
     depends_on:
       - db
       - redis
