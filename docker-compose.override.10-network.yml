@@ -1,0 +1,21 @@
+version: '2.1'
+
+networks:
+  external_network:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.32.0.0/24
+          gateway: 172.32.0.1
+          # These variables should be set by `.env` file.
+          # See `.env.sample` for example.
+        - subnet: "${OPEN_NET_IPV6_SUBNET}"
+          gateway: "${OPEN_NET_IPV6_GATEWAY}"
+          ip_range: "${OPEN_NET_IPV6_IP_RANGE}"
+  internal_network:
+    driver: bridge
+    internal: true
+    ipam:
+      driver: default
