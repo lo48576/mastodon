@@ -52,8 +52,9 @@ services:
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:3000/health || exit 1"]
-    ports:
-      - "127.0.0.1:3000:3000"
+### Comment out to use reverse proxy.
+#    ports:
+#      - "127.0.0.1:3000:3000"
     depends_on:
       - db
       - redis
@@ -68,12 +69,14 @@ services:
     env_file: .env.production
     command: node ./streaming
     networks:
-      - external_network
+### Comment out to use reverse proxy (so that `web` has no need to join `external_network`).
+#      - external_network
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1"]
-    ports:
-      - "127.0.0.1:4000:4000"
+### Comment out to use reverse proxy.
+#    ports:
+#      - "127.0.0.1:4000:4000"
     depends_on:
       - db
       - redis
