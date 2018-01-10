@@ -1,0 +1,7 @@
+version: '2.1'
+services:
+
+  db:
+    # See <https://stackoverflow.com/a/41912295/6482733> and
+    # <https://lets.postgresql.jp/documents/tutorial/troubleshoot/1>.
+    command: postgres -c autovacuum_vacuum_cost_limit=200
