@@ -9,6 +9,9 @@ services:
 ### Uncomment to enable DB persistance
     volumes:
       - ./postgres:/var/lib/postgresql/data
+    environment:
+      # Use the same value as the number of sidekiq threads.
+      - "DB_POOL=15"
 
   redis:
     restart: always
@@ -72,7 +75,7 @@ services:
     image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
-    command: bundle exec sidekiq -q default -q mailers -q pull -q push
+    command: bundle exec sidekiq -c 15 -q default -q mailers -q pull -q push
     depends_on:
       - db
       - redis
