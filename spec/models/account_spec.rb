@@ -606,14 +606,14 @@ RSpec.describe Account, type: :model do
         expect(account).to model_have_error_on_field(:username)
       end
 
-      it 'is invalid if the username is longer then 30 characters' do
-        account = Fabricate.build(:account, username: Faker::Lorem.characters(number: 31))
+      it 'is invalid if the username is longer then 50 characters' do
+        account = Fabricate.build(:account, username: Faker::Lorem.characters(number: 51))
         account.valid?
         expect(account).to model_have_error_on_field(:username)
       end
 
-      it 'is invalid if the display name is longer than 30 characters' do
-        account = Fabricate.build(:account, display_name: Faker::Lorem.characters(number: 31))
+      it 'is invalid if the display name is longer than 50 characters' do
+        account = Fabricate.build(:account, display_name: Faker::Lorem.characters(number: 51))
         account.valid?
         expect(account).to model_have_error_on_field(:display_name)
       end
@@ -652,14 +652,14 @@ RSpec.describe Account, type: :model do
         expect(account).to model_have_error_on_field(:username)
       end
 
-      it 'is valid even if the username is longer then 30 characters' do
-        account = Fabricate.build(:account, domain: 'domain', username: Faker::Lorem.characters(number: 31))
+      it 'is valid even if the username is longer then 50 characters' do
+        account = Fabricate.build(:account, domain: 'domain', username: Faker::Lorem.characters(number: 51))
         account.valid?
         expect(account).not_to model_have_error_on_field(:username)
       end
 
-      it 'is valid even if the display name is longer than 30 characters' do
-        account = Fabricate.build(:account, domain: 'domain', display_name: Faker::Lorem.characters(number: 31))
+      it 'is valid even if the display name is longer than 50 characters' do
+        account = Fabricate.build(:account, domain: 'domain', display_name: Faker::Lorem.characters(number: 51))
         account.valid?
         expect(account).not_to model_have_error_on_field(:display_name)
       end
