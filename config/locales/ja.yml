@@ -36,11 +36,12 @@ ja:
     terms: 利用規約
     unavailable_content: 制限中のサーバー
     unavailable_content_description:
-      reason: '制限理由:'
-      rejecting_media: このサーバーからのメディアファイルは受信されず、サムネイルも表示されません。表示するにはクリックしてそのサーバーに直接アクセスする必要があります。
-      silenced: このサーバーからの投稿は相手をフォローしてもあなたのホームタイムライン以外には表示されません。
-      suspended: このサーバーからは誰もフォローできません。このサーバーからのデータは受信されず、やりとりもされません。
-    unavailable_content_html: 通常 Mastodon では連合先のどんなサーバーのユーザーとでもやりとりできます。ただし次のサーバーには例外が設定されています。
+      domain: サーバー
+      reason: 制限理由
+      rejecting_media: 'これらのサーバーからのメディアファイルは処理されず、保存や変換もされません。サムネイルも表示されません。表示するにはクリックしてそのサーバーに直接アクセスする必要があります:'
+      silenced: 'これらのサーバーからの投稿は公開タイムラインと会話から隠されます。また該当するユーザーからの通知は相手をフォローしている場合を除き表示されません:'
+      suspended: 'これらのサーバーからのデータは処理されず、保存や変換されません。該当するユーザーとの交流もできません:'
+    unavailable_content_html: 通常 Mastodon では連合先のどんなサーバーのユーザーとやりとりできます。ただし次のサーバーには例外が設定されています。
     user_count_after:
       other: 人
     user_count_before: ユーザー数
@@ -235,11 +236,14 @@ ja:
       delete: 削除
       destroyed_msg: 絵文字の削除に成功しました！
       disable: 無効化
+      disabled: 無効
       disabled_msg: 絵文字を無効化しました
       emoji: 絵文字
       enable: 有効化
+      enabled: 有効
       enabled_msg: 絵文字を有効化しました
       image_hint: 50KBまでのPNG画像を利用できます
+      list: 表示
       listed: 収載
       new:
         title: 新規カスタム絵文字の追加
@@ -248,7 +252,8 @@ ja:
       shortcode_hint: 2文字以上の半角英数字とアンダーバーのみ利用できます
       title: カスタム絵文字
       uncategorized: 未分類
-      unlisted: 未収載
+      unlist: 非表示
+      unlisted: 非表示
       update_failed_msg: 絵文字を更新できませんでした
       updated_msg: 絵文字の更新に成功しました！
       upload: アップロード
@@ -282,7 +287,7 @@ ja:
       whitelist_mode: ホワイトリストモード
     domain_allows:
       add_new: ホワイトリストに追加
-      created_msg: ドメインのホワイトリストへの登録が正常に完了しました
+      created_msg: ドメインのホワイトリストへの登録が完了しました
       destroyed_msg: ドメインがホワイトリストから削除されました
       undo: ホワイトリストから削除
     domain_blocks:
@@ -377,6 +382,7 @@ ja:
       pending: リレーサーバーの承認待ちです
       save_and_enable: 保存して有効にする
       setup: リレー接続を設定する
+      signatures_not_enabled: セキュアモードまたはホワイトリストモードが有効の場合、リレーは正常に動作しません
       status: ステータス
       title: リレー
     report_notes:
@@ -551,9 +557,9 @@ ja:
   aliases:
     add_new: エイリアスを作成
     created_msg: エイリアスを作成しました。これで以前のアカウントから引っ越しを開始できます。
-    deleted_msg: エイリアスを解除しました。そのアカウントからは引っ越しできなくなります。
+    deleted_msg: エイリアスを削除しました。そのアカウントからは引っ越しできなくなります。
     hint_html: 他のアカウントからこのアカウントにフォロワーを引き継いで引っ越したい場合、ここでエイリアスを作成しておく必要があります。エイリアス自体は<strong>無害で、取り消す</strong>ことができます。<strong>引っ越しは以前のアカウント側から開始する必要があります</strong>。
-    remove: エイリアスを解除
+    remove: エイリアスを削除
   appearance:
     advanced_web_interface: 上級者向け UI
     advanced_web_interface_hint: ディスプレイを幅いっぱいまで活用したい場合、上級者向け UI をおすすめします。ホーム、通知、連合タイムライン、更にはリストやハッシュタグなど、様々な異なるカラムから望む限りの情報を一度に受け取れるような設定が可能になります。
@@ -646,9 +652,22 @@ ja:
       x_months: "%{count}月"
       x_seconds: "%{count}秒"
   deletes:
+    challenge_not_passed: 入力された情報は正しくありません
     confirm_password: 本人確認のため、現在のパスワードを入力してください
+    confirm_username: 確認のためユーザー名を入力してください
     proceed: アカウントを削除する
     success_msg: アカウントは正常に削除されました
+    warning:
+      before: '続行する前に、次の点を再度確認してください:'
+      caches: 削除しても他のサーバーに残り続ける場合があります
+      data_removal: あなたの投稿やその他のデータはこのサーバーから完全に削除されます
+      email_change_html: アカウントを削除しなくても<a href="%{path}">メールアドレスを変更</a>できます
+      email_contact_html: それでも届かない場合、<a href="mailto:%{email}">%{email}</a> までメールで問い合わせてください
+      email_reconfirmation_html: 確認のメールが届かない場合、<a href="%{path}">もう一度申請</a>できます。
+      irreversible: アカウントを元に戻したり復活させることはできません
+      more_details_html: 詳しくは<a href="%{terms_path}">プライバシーポリシー</a>をご覧ください。
+      username_available: あなたのユーザー名は再利用できるようになります
+      username_unavailable: あなたのユーザー名は引き続き利用できません
   directories:
     directory: ディレクトリ
     explanation: 関心を軸にユーザーを発見しよう
@@ -718,6 +737,7 @@ ja:
     all: すべて
     changes_saved_msg: 正常に変更されました！
     copy: コピー
+    no_batch_actions_available: 利用可能なバッチアクションはありません
     order_by: 並び順
     save_changes: 変更を保存
     validation_errors:
@@ -787,6 +807,34 @@ ja:
       too_many: 追加できるファイルは4つまでです
   migrations:
     acct: 引っ越し先の ユーザー名@ドメイン
+    cancel: 引っ越しを取り消す
+    cancel_explanation: 引っ越しを取り消すと現在のアカウントが再度有効化されますが、引き継がれたフォロワーは戻されません。
+    cancelled_msg: 引っ越し設定を取り消しました。
+    errors:
+      already_moved: は既に引っ越したアカウントと同じです
+      missing_also_known_as: はこのアカウントとエイリアスの設定がされていません
+      move_to_self: 同じアカウントに引っ越すことはできません
+      not_found: 見つかりませんでした
+      on_cooldown: クールダウン期間中です
+    followers_count: 引き継がれるフォロワー
+    incoming_migrations: 別のアカウントから引っ越す
+    incoming_migrations_html: 別のアカウントからこのアカウントに引っ越すには、まず<a href="%{path}">アカウントエイリアスを作成</a>する必要があります。
+    moved_msg: アカウントは %{acct} に引っ越し設定されており、フォロワーは引っ越し先に引き継がれています。
+    not_redirecting: アカウントは現在引っ越し設定されていません。
+    on_cooldown: あなたは最近アカウントを引っ越しました。この機能は %{count} 日後に再度利用できるようになります。
+    past_migrations: 過去の引っ越し
+    proceed_with_move: フォロワーを引き継ぐ
+    redirecting_to: アカウントは %{acct} に引っ越し設定されています。
+    set_redirect: 引っ越しを設定
+    warning:
+      backreference_required: まずは引っ越し先のアカウントでこのアカウントに対しエイリアスを作成する必要があります
+      before: '続行する前に、次の点を再度確認してください:'
+      cooldown: 引っ越し後はクールダウン期間があります。その間再度引っ越すことはできません
+      disabled_account: 引っ越した後はデータのエクスポートと最有効化を除きほとんどの機能が利用できなくなります
+      followers: すべてのフォロワーを現在のアカウントから新しいアカウントに引き継ぎます
+      only_redirect_html: あるいは、<a href="%{path}">引っ越し先の表示のみ</a>も可能です。
+      other_data: その他のデータは自動的に引き継がれません
+      redirect: プロフィールに引っ越し済みの通知が表示され、検索結果から除外されます
   moderation:
     title: モデレーション
   notification_mailer:
@@ -928,7 +976,8 @@ ja:
     title: セッション
   settings:
     account: アカウント
-    account_settings: セキュリティ
+    account_settings: アカウント設定
+    aliases: アカウントエイリアス
     appearance: 外観
     authorized_apps: 認証済みアプリ
     back: Mastodon に戻る
@@ -968,6 +1017,8 @@ ja:
       private: 非公開のトゥートを固定することはできません
       reblog: ブーストを固定することはできません
     poll:
+      total_people:
+        other: "%{count} 人"
       total_votes:
         other: "%{count}票"
       vote: 投票
@@ -1079,7 +1130,7 @@ ja:
       default: "%Y年%m月%d日 %H:%M"
       month: "%Y年 %b"
   two_factor_authentication:
-    code_hint: 確認するには認証アプリで表示されたコードを入力してください
+    code_hint: 続行するには認証アプリで表示されたコードを入力してください
     description_html: "<strong>二段階認証</strong>を有効にするとログイン時、認証アプリからコードを入力する必要があります。"
     disable: 無効
     enable: 有効
