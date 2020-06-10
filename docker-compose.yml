@@ -1,9 +1,9 @@
-version: '3'
+version: '2.1'
 services:
 
   db:
     restart: always
-    image: postgres:9.6-alpine
+    image: postgres:12.2-alpine
     shm_size: 256mb
     networks:
       - internal_network
@@ -22,28 +22,29 @@ services:
     volumes:
       - ./redis:/data
 
-#  es:
-#    restart: always
+  es:
+    restart: always
 #    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.10
-#    environment:
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#      - "cluster.name=es-mastodon"
-#      - "discovery.type=single-node"
-#      - "bootstrap.memory_lock=true"
-#    networks:
-#      - internal_network
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
-#    volumes:
-#      - ./elasticsearch:/usr/share/elasticsearch/data
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
+    build: docker-elasticsearch/
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "cluster.name=es-mastodon"
+      - "discovery.type=single-node"
+      - "bootstrap.memory_lock=true"
+    networks:
+      - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+    volumes:
+      - ./elasticsearch:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   web:
     build: .
-    image: tootsuite/mastodon
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
@@ -52,35 +53,38 @@ services:
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:3000/health || exit 1"]
-    ports:
-      - "127.0.0.1:3000:3000"
+### Comment out to use reverse proxy.
+#    ports:
+#      - "127.0.0.1:3000:3000"
     depends_on:
       - db
       - redis
-#      - es
+      - es
     volumes:
       - ./public/system:/mastodon/public/system
 
   streaming:
     build: .
-    image: tootsuite/mastodon
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     command: node ./streaming
     networks:
-      - external_network
+### Comment out to use reverse proxy (so that `web` has no need to join `external_network`).
+#      - external_network
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1"]
-    ports:
-      - "127.0.0.1:4000:4000"
+### Comment out to use reverse proxy.
+#    ports:
+#      - "127.0.0.1:4000:4000"
     depends_on:
       - db
       - redis
 
   sidekiq:
     build: .
-    image: tootsuite/mastodon
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     command: bundle exec sidekiq
