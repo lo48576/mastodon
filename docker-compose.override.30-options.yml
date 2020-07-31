@@ -1,0 +1,45 @@
+version: '2.1'
+services:
+
+  db:
+    # See <https://stackoverflow.com/a/41912295/6482733> and
+    # <https://lets.postgresql.jp/documents/tutorial/troubleshoot/1>.
+    command: postgres -c autovacuum_vacuum_cost_limit=200
+
+  sidekiq:
+    # Sidekiq threads without `push` queue.
+    build: .
+    image: tootsuite/mastodon:edge
+    restart: always
+    env_file: .env.production
+    environment:
+      # Use the same value as the number of sidekiq threads.
+      - "DB_POOL=8"
+    command: bundle exec sidekiq -c 8 -q default -q mailers -q pull
+    depends_on:
+      - db
+      - redis
+    networks:
+      - external_network
+      - internal_network
+    volumes:
+      - ./public/system:/mastodon/public/system
+
+  sidekiq-push:
+    # Sidekiq threads only with `push` queue.
+    build: .
+    image: tootsuite/mastodon:edge
+    restart: always
+    env_file: .env.production
+    environment:
+      # Use the same value as the number of sidekiq threads.
+      - "DB_POOL=4"
+    command: bundle exec sidekiq -c 4 -q push
+    depends_on:
+      - db
+      - redis
+    networks:
+      - external_network
+      - internal_network
+    volumes:
+      - ./public/system:/mastodon/public/system
