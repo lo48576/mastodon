@@ -106,7 +106,7 @@ class FeedManager
     crutches = build_crutches(into_account.id, statuses)
 
     statuses.each do |status|
-      next if filter_from_home?(status, into_account, crutches)
+      next if filter_from_home?(status, into_account.id, crutches)
 
       add_to_feed(:home, into_account.id, status, aggregate)
     end
@@ -124,9 +124,15 @@ class FeedManager
   end
 
   def clear_from_timeline(account, target_account)
+    # Clear from timeline all statuses from or mentionning target_account
     timeline_key        = key(:home, account.id)
     timeline_status_ids = redis.zrange(timeline_key, 0, -1)
-    target_statuses     = Status.where(id: timeline_status_ids, account: target_account)
+    statuses            = Status.where(id: timeline_status_ids).select(:id, :reblog_of_id, :account_id).to_a
+    reblogged_ids       = Status.where(id: statuses.map(&:reblog_of_id).compact, account: target_account).pluck(:id)
+    with_mentions_ids   = Mention.active.where(status_id: statuses.flat_map { |s| [s.id, s.reblog_of_id] }.compact, account: target_account).pluck(:status_id)
+    target_statuses     = statuses.filter do |status|
+      status.account_id == target_account.id || reblogged_ids.include?(status.reblog_of_id) || with_mentions_ids.include?(status.id) || with_mentions_ids.include?(status.reblog_of_id)
+    end
 
     target_statuses.each do |status|
       unpush_from_home(account, status)
@@ -169,7 +175,7 @@ class FeedManager
   private
 
   def push_update_required?(timeline_id)
-    redis.exists("subscribed:#{timeline_id}")
+    redis.exists?("subscribed:#{timeline_id}")
   end
 
   def blocks_or_mutes?(receiver_id, account_ids, context)
