@@ -1,0 +1,26 @@
+version: '2.1'
+services:
+
+  nginx-proxy:
+    # nginx:latest uses debian.
+    #image: nginx:latest
+    # alpine version uses newer openssl and supports ALPN (i.e. it supports http/2 better) (2017-01-19).
+    image: nginx:alpine
+    restart: always
+    env_file: .env.production
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+      - streaming
+    volumes:
+      - ./lo48576/static/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./lo48576/static/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./lo48576/static/nginx/sites-enabled:/etc/nginx/sites-enabled:ro
+      - ./lo48576/dynamic/nginx/html:/usr/share/nginx/html:ro
+      - ./public:/usr/share/nginx/mastodon-public:ro
+      - ${ETC_LETSENCRYPT_DIR}:/etc/nginx/certs:ro
+    networks:
+      - external_network
+      - internal_network
