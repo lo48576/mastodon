@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 services:
 
   db:
@@ -45,7 +45,7 @@ services:
 
   web:
     build: .
-    image: tootsuite/mastodon
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
@@ -54,8 +54,9 @@ services:
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:3000/health || exit 1"]
-    ports:
-      - "127.0.0.1:3000:3000"
+### Comment out to use reverse proxy.
+#    ports:
+#      - "127.0.0.1:3000:3000"
     depends_on:
       - db
       - redis
@@ -65,24 +66,26 @@ services:
 
   streaming:
     build: .
-    image: tootsuite/mastodon
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     command: node ./streaming
     networks:
-      - external_network
+### Comment out to use reverse proxy (so that `web` has no need to join `external_network`).
+#      - external_network
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1"]
-    ports:
-      - "127.0.0.1:4000:4000"
+### Comment out to use reverse proxy.
+#    ports:
+#      - "127.0.0.1:4000:4000"
     depends_on:
       - db
       - redis
 
   sidekiq:
     build: .
-    image: tootsuite/mastodon
+    image: tootsuite/mastodon:edge
     restart: always
     env_file: .env.production
     command: bundle exec sidekiq
