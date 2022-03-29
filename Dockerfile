@@ -111,6 +111,7 @@ ENV BIND="0.0.0.0"
 USER mastodon
 
 # Precompile assets
+ENV NODE_OPTIONS="--max_old_space_size=2048"
 RUN cd ~ && \
 	OTP_SECRET=precompile_placeholder SECRET_KEY_BASE=precompile_placeholder rails assets:precompile && \
 	yarn cache clean
